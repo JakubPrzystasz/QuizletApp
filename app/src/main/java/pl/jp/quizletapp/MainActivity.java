@@ -1,12 +1,5 @@
 package pl.jp.quizletapp;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -17,28 +10,30 @@ import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import java.util.Objects;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import okhttp3.OkHttpClient;
-import pl.jp.quizletapp.apis.UserApi;
 import pl.jp.quizletapp.models.User;
+import pl.jp.quizletapp.services.UserService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.HTTP;
 
 public class MainActivity extends AppCompatActivity {
 
-    private User user;
-    private Retrofit retrofit;
-    private AppCompatEditText et_server;
-    private AppCompatEditText et_login;
     Button btn_scan;
     Button btn_start;
+    private AppCompatEditText et_server;
+    private AppCompatEditText et_login;
+    private QuizletApp quizletApp;
 
     ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -53,8 +48,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        checkPermission(Manifest.permission.INTERNET,100);
+        checkPermission(Manifest.permission.INTERNET, 100);
         setContentView(R.layout.activity_main);
+
+        quizletApp = (QuizletApp) getApplicationContext();
 
         et_server = (AppCompatEditText) findViewById(R.id.et_server);
         et_login = (AppCompatEditText) findViewById(R.id.et_login);
@@ -70,53 +67,52 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btn_start.setOnClickListener(v -> {
-            if(!URLUtil.isValidUrl(String.valueOf(et_server.getText()))){
+            if (!URLUtil.isValidUrl(String.valueOf(et_server.getText()))) {
                 Toast.makeText(this, "Adres serwera jest nieprawidłowy", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            if(TextUtils.isEmpty(et_login.getText())){
+            if (TextUtils.isEmpty(et_login.getText())) {
                 Toast.makeText(this, "Login jest nieprawidłowy", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             Toast.makeText(this, "Logowanie...", Toast.LENGTH_SHORT).show();
 
-            OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-            retrofit = new Retrofit.Builder()
-                    .baseUrl(String.valueOf(et_server.getText()))
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(httpClient.build())
-                    .build();
+            quizletApp.setRetrofit(String.valueOf(et_server.getText()));
 
-            UserApi service = retrofit.create(UserApi.class);
+            UserService service = quizletApp.getRetrofit().create(UserService.class);
             Call<User> callAsync = service.getUser(String.valueOf(et_login.getText()));
 
             callAsync.enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
-                    if(response.code() == HttpsURLConnection.HTTP_OK){
-                        user = response.body();
-                        Toast.makeText(MainActivity.this, "Zalogowano jako "+user.getLogin(), Toast.LENGTH_SHORT).show();
+                    if (response.code() == HttpsURLConnection.HTTP_OK) {
+                        User user = response.body();
+                        quizletApp.setUser(user);
+                        Toast.makeText(MainActivity.this, "Zalogowano jako " + user.getLogin(), Toast.LENGTH_SHORT).show();
                         loggedIn();
-                    }else if (response.code() == HttpsURLConnection.HTTP_NOT_FOUND){
+                    } else if (response.code() == HttpsURLConnection.HTTP_NOT_FOUND) {
                         Call<User> callAsync = service.postUser(String.valueOf(et_login.getText()));
                         callAsync.enqueue(new Callback<User>() {
                             @Override
                             public void onResponse(Call<User> call, Response<User> response) {
-                                if(response.code() == HttpsURLConnection.HTTP_CREATED) {
-                                    user = response.body();
+                                if (response.code() == HttpsURLConnection.HTTP_CREATED) {
+                                    User user = response.body();
+                                    quizletApp.setUser(user);
                                     Toast.makeText(MainActivity.this, "Utworzono użytkownika " + user.getLogin(), Toast.LENGTH_SHORT).show();
                                     loggedIn();
                                 }
                             }
+
                             @Override
                             public void onFailure(Call<User> call, Throwable throwable) {
                                 loginFailure();
                             }
                         });
                     }
-                 }
+                }
+
                 @Override
                 public void onFailure(Call<User> call, Throwable throwable) {
                     loginFailure();
@@ -125,23 +121,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void checkPermission(String permission, int requestCode)
-    {
+    public void checkPermission(String permission, int requestCode) {
         if (ContextCompat.checkSelfPermission(MainActivity.this, permission) == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[] { permission }, requestCode);
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission}, requestCode);
         }
     }
 
-    private void loginFailure(){
+    private void loginFailure() {
         Toast.makeText(MainActivity.this, "Nie można zalogować", Toast.LENGTH_SHORT).show();
     }
 
-    private void loggedIn(){
-//        Intent intent = new Intent(getApplicationContext(), Dashboard.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        intent.putExtra("server", String.valueOf(retrofit.baseUrl()));
-//        intent.putExtra("user", user.getLogin());
-//        startActivity(intent);
+    private void loggedIn() {
+        Intent intent = new Intent(getApplicationContext(), Dashboard.class);
+        startActivity(intent);
     }
 
 }

@@ -11,6 +11,7 @@
         android:required="false" />
 
     <application
+        android:name=".QuizletApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -22,6 +23,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Dashboard"
+            android:exported="false"
+            android:label="@string/title_activity_dashboard"
+            android:noHistory="true"
+            android:theme="@style/Theme.QuizletApp.NoActionBar" />
+        <activity
             android:name=".ScanActivity"
             android:exported="false" />
         <activity
@@ -31,6 +38,7 @@
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

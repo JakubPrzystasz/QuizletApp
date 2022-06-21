@@ -1,11 +1,12 @@
 package pl.jp.quizletapp.models;
 
 import java.util.List;
-
 public class User {
     private Long id;
     private String login;
     private List<Session> sessionList;
+
+    public User(){}
 
     public String getLogin() {
         return login;
