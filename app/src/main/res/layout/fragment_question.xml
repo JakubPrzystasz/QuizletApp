@@ -9,7 +9,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".ui.question.question">
+    tools:context=".QuestionFragment">
 
     <TextView
         android:id="@+id/tv_content"

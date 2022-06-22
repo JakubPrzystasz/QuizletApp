@@ -1,4 +1,4 @@
-package pl.jp.quizletapp.ui;
+package pl.jp.quizletapp.adapters;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -6,21 +6,23 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import pl.jp.quizletapp.placeholder.PlaceholderContent.PlaceholderItem;
+import lombok.NoArgsConstructor;
+import pl.jp.quizletapp.models.Option;
+import pl.jp.quizletapp.models.Question;
+import pl.jp.quizletapp.models.QuestionType;
 import pl.jp.quizletapp.databinding.FragmentOptionBinding;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link PlaceholderItem}.
- * TODO: Replace the implementation with code for your data type.
- */
+@NoArgsConstructor
 public class OptionRecyclerViewAdapter extends RecyclerView.Adapter<OptionRecyclerViewAdapter.ViewHolder> {
 
-    private final List<PlaceholderItem> mValues;
+    private List<Option> items;
+    private QuestionType type;
 
-    public OptionRecyclerViewAdapter(List<PlaceholderItem> items) {
-        mValues = items;
+    public OptionRecyclerViewAdapter(Question question) {
+        this.items = question.getOptionList();
+        this.type = question.getType();
     }
 
     @Override
@@ -32,18 +34,18 @@ public class OptionRecyclerViewAdapter extends RecyclerView.Adapter<OptionRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mItem = items.get(position);
+        holder.mContentView.setText(items.get(position).getContent());
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return items.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView mContentView;
-        public PlaceholderItem mItem;
+        public Option mItem;
 
         public ViewHolder(FragmentOptionBinding binding) {
             super(binding.getRoot());

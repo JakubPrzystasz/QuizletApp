@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -17,10 +16,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 import lombok.Getter;
 import pl.jp.quizletapp.models.Lecture;
-import pl.jp.quizletapp.models.Session;
-import pl.jp.quizletapp.models.User;
 import pl.jp.quizletapp.services.SessionService;
-import pl.jp.quizletapp.ui.LectureRecyclerViewAdapter;
+import pl.jp.quizletapp.adapters.LectureRecyclerViewAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,20 +33,20 @@ public class LecturesFragment extends Fragment {
             @Override
             public void onItemClick(Lecture lecture) {
                 SessionService service = quizletApp.getRetrofit().create(SessionService.class);
-                Call<Session> callAsync = service.postSession(lecture.getId().intValue(), quizletApp.getUser().getLogin());
-                callAsync.enqueue(new Callback<Session>() {
+                Call<pl.jp.quizletapp.models.Session> callAsync = service.postSession(lecture.getId().intValue(), quizletApp.getUser().getLogin());
+                callAsync.enqueue(new Callback<pl.jp.quizletapp.models.Session>() {
                     @Override
-                    public void onResponse(Call<Session> call, Response<Session> response) {
+                    public void onResponse(Call<pl.jp.quizletapp.models.Session> call, Response<pl.jp.quizletapp.models.Session> response) {
                         if (response.code() == HttpsURLConnection.HTTP_CREATED) {
-                            Session session = response.body();
+                            pl.jp.quizletapp.models.Session session = response.body();
                             quizletApp.setSession(session);
-                            Intent intent = new Intent(getActivity().getApplicationContext(), Quiz.class);
+                            Intent intent = new Intent(getActivity().getApplicationContext(), Session.class);
                             startActivity(intent);
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<Session> call, Throwable throwable) {
+                    public void onFailure(Call<pl.jp.quizletapp.models.Session> call, Throwable throwable) {
                     }
                 });
             }

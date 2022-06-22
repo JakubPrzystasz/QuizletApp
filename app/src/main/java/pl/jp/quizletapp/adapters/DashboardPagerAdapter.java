@@ -1,4 +1,4 @@
-package pl.jp.quizletapp.ui;
+package pl.jp.quizletapp.adapters;
 
 import android.content.Context;
 

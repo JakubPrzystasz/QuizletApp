@@ -1,6 +1,4 @@
-package pl.jp.quizletapp.ui.question;
-
-import androidx.lifecycle.ViewModelProvider;
+package pl.jp.quizletapp;
 
 import android.os.Bundle;
 
@@ -14,21 +12,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
+import lombok.var;
+import pl.jp.quizletapp.adapters.OptionRecyclerViewAdapter;
+import pl.jp.quizletapp.models.Question;
 
-import pl.jp.quizletapp.R;
-import pl.jp.quizletapp.placeholder.PlaceholderContent;
-import pl.jp.quizletapp.ui.OptionRecyclerViewAdapter;
+public class QuestionFragment extends Fragment {
 
-public class question extends Fragment {
-
-    private QuestionViewModel mViewModel;
-
-    // Add RecyclerView member
     private RecyclerView recyclerView;
 
-    public static question newInstance() {
-        return new question();
+    private QuizletApp quizletApp;
+
+    private Question question;
+
+    public QuestionFragment(Question question) {
+        this.question = question;
+    }
+
+    public static QuestionFragment newInstance(Question question) {
+        return new QuestionFragment(question);
     }
 
     @Nullable
@@ -40,18 +41,11 @@ public class question extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        // Add the following lines to create RecyclerView
+        quizletApp = (QuizletApp) getActivity().getApplicationContext();
+        var session = quizletApp.getSession();
         recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(new OptionRecyclerViewAdapter(PlaceholderContent.ITEMS));
+        recyclerView.setAdapter(new OptionRecyclerViewAdapter(this.question));
     }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(QuestionViewModel.class);
-        // TODO: Use the ViewModel
-    }
-
 }

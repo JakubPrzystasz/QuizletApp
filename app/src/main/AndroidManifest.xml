@@ -23,8 +23,10 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".Quiz"
-            android:exported="false" />
+            android:name=".Session"
+            android:exported="false"
+            android:label="@string/title_activity_question"
+            android:theme="@style/Theme.QuizletApp.NoActionBar" />
         <activity
             android:name=".Dashboard"
             android:exported="false"

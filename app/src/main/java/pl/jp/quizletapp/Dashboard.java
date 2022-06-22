@@ -16,7 +16,7 @@ import javax.net.ssl.HttpsURLConnection;
 import pl.jp.quizletapp.databinding.ActivityDashboardBinding;
 import pl.jp.quizletapp.models.Lecture;
 import pl.jp.quizletapp.services.LectureService;
-import pl.jp.quizletapp.ui.DashboardPagerAdapter;
+import pl.jp.quizletapp.adapters.DashboardPagerAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
