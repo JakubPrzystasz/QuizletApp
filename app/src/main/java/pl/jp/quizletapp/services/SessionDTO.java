@@ -1,15 +1,14 @@
-package pl.jp.quizletapp.models;
+package pl.jp.quizletapp.services;
 
 import java.util.List;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import pl.jp.quizletapp.models.Answer;
+import pl.jp.quizletapp.models.Question;
+import pl.jp.quizletapp.models.User;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Session {
+public class SessionDTO {
     private Long id;
 
     private User user;
@@ -18,11 +17,9 @@ public class Session {
 
     private List<Answer> answerList;
 
-    private Lecture lecture;
+    private Integer lecture;
 
     private Integer result;
 
     private Integer totalPoints;
-
-    private String LectureTitle;
 }

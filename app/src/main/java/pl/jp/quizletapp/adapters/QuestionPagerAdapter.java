@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.var;
 import pl.jp.quizletapp.QuestionFragment;
 import pl.jp.quizletapp.models.Question;
 
@@ -23,17 +24,18 @@ public class QuestionPagerAdapter extends FragmentPagerAdapter {
         super(fm);
         this.mContext = context;
         this.questions = questions;
-        this.fragments = new ArrayList<QuestionFragment>();
-        questions.forEach(question -> {
-            this.fragments.add(new QuestionFragment(question));
+        this.fragments = new ArrayList<>();
+        this.questions.forEach(v -> {
+            var fragment = QuestionFragment.newInstance(v);
+            this.fragments.add(fragment);
         });
     }
 
     @Override
     public Fragment getItem(int position) {
-        if (position >= 0 && position <= this.getCount()) {
+        if (position >= 0 && position <= this.getCount())
             return this.fragments.get(position);
-        } else
+        else
             return null;
     }
 

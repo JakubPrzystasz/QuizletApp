@@ -3,11 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list"
-    android:name="pl.jp.quizletapp.OptionFragment"
+    android:name="pl.jp.quizletapp.QuizFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".OptionFragmentMulti"
-    tools:listitem="@layout/fragment_option_multi" />
+    tools:context=".LecturesFragment"
+    tools:listitem="@layout/fragment_lecture"
+    android:layout_marginBottom="15dp"/>

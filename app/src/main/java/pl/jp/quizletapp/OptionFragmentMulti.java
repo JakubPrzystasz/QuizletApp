@@ -14,13 +14,10 @@ import lombok.NoArgsConstructor;
 import pl.jp.quizletapp.adapters.OptionRecyclerViewAdapter;
 
 @NoArgsConstructor
-public class OptionFragment extends Fragment {
+public class OptionFragmentMulti extends Fragment {
 
-    private QuizletApp quizletApp;
-
-
-    public static OptionFragment newInstance() {
-        return new OptionFragment();
+    public static OptionFragmentMulti newInstance() {
+        return new OptionFragmentMulti();
     }
 
     @Override

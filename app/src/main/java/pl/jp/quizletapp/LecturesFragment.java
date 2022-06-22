@@ -16,6 +16,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 import lombok.Getter;
 import pl.jp.quizletapp.models.Lecture;
+import pl.jp.quizletapp.services.SessionDTO;
+import pl.jp.quizletapp.services.SessionMapper;
 import pl.jp.quizletapp.services.SessionService;
 import pl.jp.quizletapp.adapters.LectureRecyclerViewAdapter;
 import retrofit2.Call;
@@ -29,27 +31,24 @@ public class LecturesFragment extends Fragment {
     private QuizletApp quizletApp;
 
     public LecturesFragment() {
-        this.lectureRecyclerViewAdapter = new LectureRecyclerViewAdapter(new LectureRecyclerViewAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Lecture lecture) {
-                SessionService service = quizletApp.getRetrofit().create(SessionService.class);
-                Call<pl.jp.quizletapp.models.Session> callAsync = service.postSession(lecture.getId().intValue(), quizletApp.getUser().getLogin());
-                callAsync.enqueue(new Callback<pl.jp.quizletapp.models.Session>() {
-                    @Override
-                    public void onResponse(Call<pl.jp.quizletapp.models.Session> call, Response<pl.jp.quizletapp.models.Session> response) {
-                        if (response.code() == HttpsURLConnection.HTTP_CREATED) {
-                            pl.jp.quizletapp.models.Session session = response.body();
-                            quizletApp.setSession(session);
-                            Intent intent = new Intent(getActivity().getApplicationContext(), Session.class);
-                            startActivity(intent);
-                        }
+        this.lectureRecyclerViewAdapter = new LectureRecyclerViewAdapter(lecture -> {
+            SessionService service = quizletApp.getRetrofit().create(SessionService.class);
+            Call<SessionDTO> callAsync = service.postSession(lecture.getId().intValue(), quizletApp.getUser().getLogin());
+            callAsync.enqueue(new Callback<>() {
+                @Override
+                public void onResponse(Call<SessionDTO> call, Response<SessionDTO> response) {
+                    if (response.code() == HttpsURLConnection.HTTP_CREATED) {
+                        SessionDTO session = response.body();
+                        quizletApp.setSession(SessionMapper.toDto(session));
+                        Intent intent = new Intent(getActivity().getApplicationContext(), Session.class);
+                        startActivity(intent);
                     }
+                }
 
-                    @Override
-                    public void onFailure(Call<pl.jp.quizletapp.models.Session> call, Throwable throwable) {
-                    }
-                });
-            }
+                @Override
+                public void onFailure(Call<SessionDTO> call, Throwable throwable) {
+                }
+            });
         });
     }
 

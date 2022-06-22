@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import pl.jp.quizletapp.LecturesFragment;
 import pl.jp.quizletapp.R;
+import pl.jp.quizletapp.ResultsFragment;
 
 public class DashboardPagerAdapter extends FragmentPagerAdapter {
 
@@ -17,13 +18,13 @@ public class DashboardPagerAdapter extends FragmentPagerAdapter {
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2};
     private final Context mContext;
     private LecturesFragment lecturesFragment;
-    private LecturesFragment fragment;
+    private ResultsFragment resultsFragment;
 
     public DashboardPagerAdapter(Context context, FragmentManager fm) {
         super(fm);
         mContext = context;
         lecturesFragment = new LecturesFragment();
-        fragment = new LecturesFragment();
+        resultsFragment = new ResultsFragment();
 
     }
 
@@ -33,7 +34,7 @@ public class DashboardPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return lecturesFragment;
             case 1:
-                return fragment;
+                return resultsFragment;
             default:
                 return null;
         }

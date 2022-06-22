@@ -9,14 +9,15 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import pl.jp.quizletapp.databinding.ActivityDashboardBinding;
-import pl.jp.quizletapp.models.Lecture;
-import pl.jp.quizletapp.services.LectureService;
 import pl.jp.quizletapp.adapters.DashboardPagerAdapter;
+import pl.jp.quizletapp.databinding.ActivityDashboardBinding;
+import pl.jp.quizletapp.services.SessionDTO;
+import pl.jp.quizletapp.services.SessionService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,26 +40,34 @@ public class Dashboard extends AppCompatActivity {
         TabLayout tabs = binding.tabs;
         tabs.setupWithViewPager(viewPager);
 
-        LectureService service = quizletApp.getRetrofit().create(LectureService.class);
-        Call<List<Lecture>> callAsync = service.getLectures();
+        final Fragment fragment = sectionsPagerAdapter.getItem(0);
+        ((LecturesFragment) fragment).getLectureRecyclerViewAdapter().setLectures(response.body());
+        ((LecturesFragment) fragment).getLectureRecyclerViewAdapter().notifyDataSetChanged();
 
-        callAsync.enqueue(new Callback<List<Lecture>>() {
 
-            @Override
-            public void onResponse(Call<List<Lecture>> call, Response<List<Lecture>> response) {
-                if (response.code() == HttpsURLConnection.HTTP_OK) {
-                    final Fragment fragment = sectionsPagerAdapter.getItem(0);
-                    ((LecturesFragment) fragment).getLectureRecyclerViewAdapter().setLectures(response.body());
-                    ((LecturesFragment) fragment).getLectureRecyclerViewAdapter().notifyDataSetChanged();
+        {
+            SessionService sessionService = quizletApp.getRetrofit().create(SessionService.class);
+            Call<List<SessionDTO>> callAsync = sessionService.getSessions();
+            callAsync.enqueue(new Callback<>() {
+                @Override
+                public void onResponse(Call<List<SessionDTO>> call, Response<List<SessionDTO>> response) {
+                    if (response.code() == HttpsURLConnection.HTTP_OK) {
+                        final Fragment fragment = sectionsPagerAdapter.getItem(1);
+                        List<pl.jp.quizletapp.models.Session> sessionList = new ArrayList<>();
+                        for(SessionDTO dto : response.body()){
+
+                        }
+                        ((ResultsFragment) fragment).getResultRecyclerViewAdapter().setSessions(sessionList);
+                        ((ResultsFragment) fragment).getResultRecyclerViewAdapter().notifyDataSetChanged();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<Lecture>> call, Throwable t) {
-                Toast.makeText(Dashboard.this, "Nie można pobrać danych", Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<List<SessionDTO>> call, Throwable t) {
 
+                }
+            });
+        }
     }
 
     @Override

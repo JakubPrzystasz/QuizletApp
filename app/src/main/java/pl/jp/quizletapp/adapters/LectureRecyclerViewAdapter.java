@@ -60,12 +60,7 @@ public class LectureRecyclerViewAdapter extends RecyclerView.Adapter<LectureRecy
         }
 
         public void bind(final Lecture lecture, final OnItemClickListener listener) {
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onItemClick(lecture);
-                }
-            });
+            itemView.setOnClickListener(v -> listener.onItemClick(lecture));
         }
 
         @Override
