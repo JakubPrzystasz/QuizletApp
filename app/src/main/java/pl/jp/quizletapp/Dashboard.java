@@ -48,8 +48,8 @@ public class Dashboard extends AppCompatActivity {
             public void onResponse(Call<List<Lecture>> call, Response<List<Lecture>> response) {
                 if (response.code() == HttpsURLConnection.HTTP_OK) {
                     final Fragment fragment = sectionsPagerAdapter.getItem(0);
-                    ((QuizFragment) fragment).getLectureRecyclerViewAdapter().setLectures(response.body());
-                    ((QuizFragment) fragment).getLectureRecyclerViewAdapter().notifyDataSetChanged();
+                    ((LecturesFragment) fragment).getLectureRecyclerViewAdapter().setLectures(response.body());
+                    ((LecturesFragment) fragment).getLectureRecyclerViewAdapter().notifyDataSetChanged();
                 }
             }
 

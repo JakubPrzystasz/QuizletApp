@@ -109,6 +109,9 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_qr_scan"
                 android:gravity="center|center_vertical"
+                android:focusable="true"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
                 android:text="Zeskanuj kod QR" />
             <Button
                 android:id="@+id/btn_start"
@@ -116,6 +119,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@color/colorPrimary"
+                android:focusable="true"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
                 android:text="Zaloguj"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />

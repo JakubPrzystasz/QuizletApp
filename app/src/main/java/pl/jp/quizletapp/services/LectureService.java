@@ -13,5 +13,5 @@ public interface LectureService {
     Call<List<Lecture>> getLectures();
 
     @GET("lectures/{lectureId}")
-    Call<Lecture> getLecture(@Path("lectureId") String id);
+    Call<Lecture> getLecture(@Path("lectureId") Integer id);
 }

@@ -1,6 +1,7 @@
 package pl.jp.quizletapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,22 +13,45 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import lombok.Getter;
 import pl.jp.quizletapp.models.Lecture;
+import pl.jp.quizletapp.models.Session;
+import pl.jp.quizletapp.models.User;
+import pl.jp.quizletapp.services.SessionService;
 import pl.jp.quizletapp.ui.LectureRecyclerViewAdapter;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class QuizFragment extends Fragment {
+public class LecturesFragment extends Fragment {
 
-    private QuizletApp quizletApp;
     @Getter
     private final LectureRecyclerViewAdapter lectureRecyclerViewAdapter;
+    private QuizletApp quizletApp;
 
-    public QuizFragment() {
+    public LecturesFragment() {
         this.lectureRecyclerViewAdapter = new LectureRecyclerViewAdapter(new LectureRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Lecture lecture) {
-                //TODO: Open new Session from lecture
+                SessionService service = quizletApp.getRetrofit().create(SessionService.class);
+                Call<Session> callAsync = service.postSession(lecture.getId().intValue(), quizletApp.getUser().getLogin());
+                callAsync.enqueue(new Callback<Session>() {
+                    @Override
+                    public void onResponse(Call<Session> call, Response<Session> response) {
+                        if (response.code() == HttpsURLConnection.HTTP_CREATED) {
+                            Session session = response.body();
+                            quizletApp.setSession(session);
+                            Intent intent = new Intent(getActivity().getApplicationContext(), Quiz.class);
+                            startActivity(intent);
+                        }
+                    }
 
+                    @Override
+                    public void onFailure(Call<Session> call, Throwable throwable) {
+                    }
+                });
             }
         });
     }
@@ -35,6 +59,7 @@ public class QuizFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.quizletApp = (QuizletApp) getActivity().getApplicationContext();
     }
 
     @Override
