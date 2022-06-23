@@ -32,6 +32,8 @@ public class QuizletApp extends Application {
     private User user;
     @Getter @Setter
     private Session session;
+    @Getter
+    private String baseurl;
 
     public static Context getInstance() {
         if (null == instance) {
@@ -50,6 +52,7 @@ public class QuizletApp extends Application {
     }
 
     public void setRetrofit(String base_url) {
+        this.baseurl = base_url;
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();

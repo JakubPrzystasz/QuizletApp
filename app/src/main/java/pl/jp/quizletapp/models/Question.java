@@ -20,6 +20,6 @@ public class Question {
 
     private List<Option> optionList;
 
-    private List<QuestionMedia> mediaList;
+    private Integer imageId;
 
 }

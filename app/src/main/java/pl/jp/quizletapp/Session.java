@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import java.util.List;
+
 import lombok.var;
 import pl.jp.quizletapp.adapters.CustomViewPager;
 import pl.jp.quizletapp.adapters.QuestionPagerAdapter;
@@ -13,6 +15,7 @@ import pl.jp.quizletapp.databinding.ActivitySessionBinding;
 import pl.jp.quizletapp.models.Answer;
 import pl.jp.quizletapp.models.Option;
 import pl.jp.quizletapp.services.AnswerService;
+import pl.jp.quizletapp.services.SessionService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,10 +68,21 @@ public class Session extends AppCompatActivity {
         });
 
         binding.btnSubmit.setOnClickListener(v -> {
-            if(currentPage == quizletApp.getSession().getAssignedQuestions().size() - 1){
+            if (currentPage == quizletApp.getSession().getAssignedQuestions().size() - 1) {
                 saveFragment();
+                SessionService sessionService = quizletApp.getRetrofit().create(SessionService.class);
+                Call<pl.jp.quizletapp.models.Session> callAsync = sessionService.getSessionResults(quizletApp.getSession().getId().toString());
+                callAsync.enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(Call<pl.jp.quizletapp.models.Session> call, Response<pl.jp.quizletapp.models.Session> response) {
+
+                    }
+                    @Override
+                    public void onFailure(Call<pl.jp.quizletapp.models.Session> call, Throwable t) {
+                    }
+                });
                 finish();
-            }else {
+            } else {
                 viewPager.setCurrentItem(currentPage + 1);
             }
         });

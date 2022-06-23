@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
     private void loggedIn() {
         Intent intent = new Intent(getApplicationContext(), Dashboard.class);
         startActivity(intent);
+        this.finish();
     }
 
 }

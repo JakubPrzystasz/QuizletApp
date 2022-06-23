@@ -23,6 +23,4 @@ public class Session {
     private Integer result;
 
     private Integer totalPoints;
-
-    private String LectureTitle;
 }

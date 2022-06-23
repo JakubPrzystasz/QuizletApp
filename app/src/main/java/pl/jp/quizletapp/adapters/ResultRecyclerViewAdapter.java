@@ -11,9 +11,7 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
-import pl.jp.quizletapp.R;
 import pl.jp.quizletapp.databinding.FragmentResultBinding;
-import pl.jp.quizletapp.models.Lecture;
 import pl.jp.quizletapp.models.Session;
 
 
@@ -36,8 +34,10 @@ public class ResultRecyclerViewAdapter extends RecyclerView.Adapter<ResultRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.session = sessions.get(position);
-        holder.mTitle.setText(sessions.get(position).getLectureTitle());
-        holder.mDescription.setText(sessions.get(position).getResult()+"/"+sessions.get(position).getTotalPoints());
+        if (sessions.get(position).getLecture() != null) {
+            holder.mTitle.setText(sessions.get(position).getLecture().getTitle());
+        }
+        holder.mDescription.setText(sessions.get(position).getResult() + "/" + sessions.get(position).getTotalPoints());
         holder.bind(sessions.get(position), listener);
     }
 

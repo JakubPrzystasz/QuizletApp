@@ -34,23 +34,6 @@ public class ResultsFragment extends Fragment {
         this.resultRecyclerViewAdapter = new ResultRecyclerViewAdapter(new ResultRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Session session) {
-//                SessionService service = quizletApp.getRetrofit().create(SessionService.class);
-//                Call<pl.jp.quizletapp.models.Session> callAsync = service.postSession(lecture.getId().intValue(), quizletApp.getUser().getLogin());
-//                callAsync.enqueue(new Callback<pl.jp.quizletapp.models.Session>() {
-//                    @Override
-//                    public void onResponse(Call<pl.jp.quizletapp.models.Session> call, Response<pl.jp.quizletapp.models.Session> response) {
-//                        if (response.code() == HttpsURLConnection.HTTP_CREATED) {
-//                            pl.jp.quizletapp.models.Session session = response.body();
-//                            quizletApp.setSession(session);
-//                            Intent intent = new Intent(getActivity().getApplicationContext(), Session.class);
-//                            startActivity(intent);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<pl.jp.quizletapp.models.Session> call, Throwable throwable) {
-//                    }
-//                });
             }
         });
     }

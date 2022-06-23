@@ -20,13 +20,20 @@
         android:textSize="16dp"
         android:textStyle="bold" />
 
+    <ImageView
+        android:id="@+id/iv_question"
+        android:layout_width="match_parent"
+        android:layout_height="256dp"
+        android:layout_margin="10dp"
+        />
+
     <TextView
         android:id="@+id/tv_prompt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:gravity="center"
-        android:text="Zaznacz poprawne odpowiedzi"
+        android:text="Zaznacz odpowiedzi"
         android:textColor="#878787"
         android:textSize="14dp" />
 
